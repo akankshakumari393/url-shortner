@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/akankshakumari393/url-shortner/handler"
+	"github.com/akankshakumari393/url-shortner/middleware"
 	"github.com/gorilla/mux"
 )
 
@@ -18,6 +19,8 @@ func main() {
 	router.HandleFunc("/", urlShortener.WelcomeHandler).Methods("GET")
 	router.HandleFunc("/shortcode", urlShortener.ShortenHandler).Methods("PUT")
 	router.HandleFunc("/r/{shortURL}", urlShortener.RedirectHandler).Methods("GET")
+
+	router.Use(middleware.LoggingMiddleware)
 
 	srv := &http.Server{
 		Handler:      router,
