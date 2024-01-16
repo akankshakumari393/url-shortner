@@ -89,3 +89,22 @@ func (rc *RedisClient) SaveUrl(ctx context.Context, shortUrl string, originalUrl
 	}
 	return nil
 }
+
+// MockRedisClient represents a mock Redis client for testing
+type MockRedisClient struct{}
+
+func (m *MockRedisClient) ShortenURL(ctx context.Context, destination string) (string, error) {
+	// Mock the ShortenURL method
+	// You can implement your own logic for testing
+	return "mockShortURL", nil
+}
+
+func (m *MockRedisClient) RedirectToURL(ctx context.Context, shortURL string) (string, error) {
+	// Mock the RedirectToURL method
+	// You can implement your own logic for testing
+	return "https://example.com", nil
+}
+
+func NewMockRedisClient() *MockRedisClient {
+	return &MockRedisClient{}
+}
