@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/akankshakumari393/url-shortner/urlgenerator"
 )
 
 var input struct {
@@ -12,11 +14,14 @@ var input struct {
 
 // URLShortener represents the URL shortener application
 type URLShortener struct {
+	redisCli urlgenerator.RedisClientProvider
 }
 
 // NewURLShortener creates a new instance of URLShortener
-func NewURLShortener() *URLShortener {
-	return &URLShortener{}
+func NewURLShortener(redisCli urlgenerator.RedisClientProvider) *URLShortener {
+	return &URLShortener{
+		redisCli: redisCli,
+	}
 }
 
 // WelcomeHandler handles the welcome route

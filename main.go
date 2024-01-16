@@ -7,13 +7,14 @@ import (
 
 	"github.com/akankshakumari393/url-shortner/handler"
 	"github.com/akankshakumari393/url-shortner/middleware"
+	"github.com/akankshakumari393/url-shortner/urlgenerator"
 	"github.com/gorilla/mux"
 )
 
 func main() {
 	router := mux.NewRouter()
 
-	urlShortener := handler.NewURLShortener()
+	urlShortener := handler.NewURLShortener(urlgenerator.NewRedisClient())
 
 	// Define routes
 	router.HandleFunc("/", urlShortener.WelcomeHandler).Methods("GET")
