@@ -5,10 +5,11 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gorilla/mux"
+
 	"github.com/akankshakumari393/url-shortner/handler"
 	"github.com/akankshakumari393/url-shortner/middleware"
 	"github.com/akankshakumari393/url-shortner/urlgenerator"
-	"github.com/gorilla/mux"
 )
 
 func main() {

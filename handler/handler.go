@@ -6,8 +6,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/akankshakumari393/url-shortner/urlgenerator"
 	"github.com/gorilla/mux"
+
+	"github.com/akankshakumari393/url-shortner/urlgenerator"
 )
 
 var input struct {
