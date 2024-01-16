@@ -5,11 +5,19 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/akankshakumari393/url-shortner/handler"
 	"github.com/gorilla/mux"
 )
 
 func main() {
 	router := mux.NewRouter()
+
+	urlShortener := handler.NewURLShortener()
+
+	// Define routes
+	router.HandleFunc("/", urlShortener.WelcomeHandler).Methods("GET")
+	router.HandleFunc("/shortcode", urlShortener.ShortenHandler).Methods("PUT")
+	router.HandleFunc("/r/{shortURL}", urlShortener.RedirectHandler).Methods("GET")
 
 	srv := &http.Server{
 		Handler:      router,
