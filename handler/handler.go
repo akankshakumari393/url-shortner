@@ -1,11 +1,13 @@
 package handler
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
 
 	"github.com/akankshakumari393/url-shortner/urlgenerator"
+	"github.com/gorilla/mux"
 )
 
 var input struct {
@@ -31,6 +33,7 @@ func (u *URLShortener) WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 
 // ShortenHandler handles the shorten route
 func (u *URLShortener) ShortenHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
 	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
 		handleError(w, "Invalid JSON format", http.StatusBadRequest)
@@ -47,13 +50,24 @@ func (u *URLShortener) ShortenHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// get the shortURL
+	shortURL, err := u.redisCli.ShortenURL(ctx, input.Destination)
+	if err != nil {
+		handleError(w, "Internal Server Error : "+err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-	response := map[string]string{"short_url": fmt.Sprintf("http://localhost:8080/r/%s", "")}
+	response := map[string]string{"short_url": fmt.Sprintf("http://localhost:8080/r/%s", shortURL)}
 	respondJSON(w, response, http.StatusCreated)
 }
 
 // RedirectHandler handles the redirect route
 func (u *URLShortener) RedirectHandler(w http.ResponseWriter, r *http.Request) {
-	// Add redirection
+	ctx := context.Background()
+	shortURL := mux.Vars(r)["shortURL"]
+	url, err := u.redisCli.RedirectToURL(ctx, shortURL)
+	if err != nil {
+		handleError(w, "URL Not Found", http.StatusNotFound)
+		return
+	}
+	http.Redirect(w, r, url, http.StatusSeeOther)
 }
